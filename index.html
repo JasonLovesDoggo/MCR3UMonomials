@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplying Polynomials</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Remove KaTeX -->
+    <!-- Add MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\$$', '\$$']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Multiplying Polynomials</h1>
+            <nav>
+                <ul>
+                    <li><a href="#intro">Introduction</a></li>
+                    <li><a href="#multiplying-monomials">Monomials</a></li>
+                    <li><a href="#multiplying-binomials">Binomials</a></li>
+                    <li><a href="#special-cases">Special Cases</a></li>
+                    <li><a href="#combination">Combination</a></li>
+                    <li><a href="#multiplying-polynomials">Polynomials</a></li>
+                    <li><a href="#application">Application</a></li>
+                    <li><a href="#practice">Practice</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="intro" class="section">
+            <h2>Introduction to Polynomial Multiplication</h2>
+            <p>Polynomial multiplication is a fundamental algebraic operation that allows us to find the product of two or more polynomials. This skill is essential for solving various mathematical problems and has applications in many fields.</p>
+            
+            <div class="info-box">
+                <h3>What You'll Learn</h3>
+                <ul>
+                    <li>Multiplying polynomials by monomials</li>
+                    <li>Using the FOIL method for binomials</li>
+                    <li>Special cases like squaring binomials and difference of squares</li>
+                    <li>Multiplying larger polynomials</li>
+                    <li>Real-world applications</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="monomial" class="section">
+            <h2>Multiplying with a Monomial</h2>
+            <p>When multiplying a polynomial by a monomial, we use the distributive property.</p>
+            
+            <div class="formula-box">
+                <p>Distributive Property: $$a(b + c) = ab + ac$$</p>
+            </div>
+            
+            <div class="example">
+                <h3>Example:</h3>
+                <p>Simplify: $$5x - 2x[3x - (5x - 1)]$$</p>
+                <div class="solution">
+                    <p>Step 1: Simplify inside the brackets</p>
+                    <p>$$5x - 2x[3x - (5x - 1)]$$</p>
+                    <p>$$= 5x - 2x[3x - 5x + 1]$$</p>
+                    <p>$$= 5x - 2x[-2x + 1]$$</p>
+                    
+                    <p>Step 2: Apply the distributive property</p>
+                    <p>$$= 5x - 2x \cdot (-2x) + 2x \cdot 1$$</p>
+                    <p>$$= 5x + 4x^2 + 2x$$</p>
+                    
+                    <p>Step 3: Combine like terms</p>
+                    <p>$$= 4x^2 + 7x$$</p>
+                </div>
+                <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+            </div>
+        </section>
+
+        <section id="foil" class="section">
+            <h2>The FOIL Method</h2>
+            <p>FOIL is an acronym that helps us remember how to multiply two binomials:</p>
+            <ul>
+                <li><strong>F</strong>irst terms</li>
+                <li><strong>O</strong>utside terms</li>
+                <li><strong>I</strong>nside terms</li>
+                <li><strong>L</strong>ast terms</li>
+            </ul>
+            
+            <div class="interactive-foil">
+                <h3>Interactive FOIL Example: (2x-3)(5x+1)</h3>
+                <div class="foil-container">
+                    <div class="foil-expression">
+                        <div class="binomial">(2x-3)</div>
+                        <div class="binomial">(5x+1)</div>
+                    </div>
+                    <div class="foil-steps">
+                        <div class="foil-step" id="first-step">
+                            <span class="step-name">First</span>
+                            <span class="step-math">(2x)(5x) = 10x²</span>
+                        </div>
+                        <div class="foil-step" id="outside-step">
+                            <span class="step-name">Outside</span>
+                            <span class="step-math">(2x)(1) = 2x</span>
+                        </div>
+                        <div class="foil-step" id="inside-step">
+                            <span class="step-name">Inside</span>
+                            <span class="step-math">(-3)(5x) = -15x</span>
+                        </div>
+                        <div class="foil-step" id="last-step">
+                            <span class="step-name">Last</span>
+                            <span class="step-math">(-3)(1) = -3</span>
+                        </div>
+                    </div>
+                    <div class="foil-result">
+                        <p>Result: 10x² + 2x - 15x - 3</p>
+                        <p>Simplified: 10x² - 13x - 3</p>
+                    </div>
+                </div>
+                <div class="foil-controls">
+                    <button id="highlight-f" class="foil-btn">Highlight F</button>
+                    <button id="highlight-o" class="foil-btn">Highlight O</button>
+                    <button id="highlight-i" class="foil-btn">Highlight I</button>
+                    <button id="highlight-l" class="foil-btn">Highlight L</button>
+                    <button id="show-all" class="foil-btn">Show All</button>
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>Another Example:</h3>
+                <p>Multiply: $$(2x - 3)(5x + 1)$$</p>
+                <div class="solution">
+                    <p>Using FOIL:</p>
+                    <p><strong>F</strong>irst: $$2x \cdot 5x = 10x^2$$</p>
+                    <p><strong>O</strong>utside: $$2x \cdot 1 = 2x$$</p>
+                    <p><strong>I</strong>nside: $$-3 \cdot 5x = -15x$$</p>
+                    <p><strong>L</strong>ast: $$-3 \cdot 1 = -3$$</p>
+                    <p>Combining all terms: $$10x^2 + 2x - 15x - 3$$</p>
+                    <p>Simplified: $$10x^2 - 13x - 3$$</p>
+                </div>
+                <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+            </div>
+        </section>
+
+        <section id="special-cases" class="section">
+            <h2>Special Cases</h2>
+            
+            <div class="special-case">
+                <h3>1. Squaring a Binomial</h3>
+                <div class="formula-box">
+                    <p>$$(a + b)^2 = a^2 + 2ab + b^2$$</p>
+                    <p>$$(a - b)^2 = a^2 - 2ab + b^2$$</p>
+                </div>
+                
+                <div class="example">
+                    <h4>Example:</h4>
+                    <p>Simplify: $$(2x - 5)^2$$</p>
+                    <div class="solution">
+                        <p>Using the formula $$(a - b)^2 = a^2 - 2ab + b^2$$:</p>
+                        <p>$$(2x - 5)^2 = (2x)^2 - 2(2x)(5) + 5^2$$</p>
+                        <p>$$= 4x^2 - 20x + 25$$</p>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+                </div>
+            </div>
+            
+            <div class="special-case">
+                <h3>2. Difference of Squares</h3>
+                <div class="formula-box">
+                    <p>$$(a + b)(a - b) = a^2 - b^2$$</p>
+                </div>
+                
+                <div class="example">
+                    <h4>Example:</h4>
+                    <p>Simplify: $$(2x - 3)(2x + 3)$$</p>
+                    <div class="solution">
+                        <p>Using the formula $$(a + b)(a - b) = a^2 - b^2$$:</p>
+                        <p>$$(2x - 3)(2x + 3) = (2x)^2 - 3^2$$</p>
+                        <p>$$= 4x^2 - 9$$</p>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="multiplying-monomials" class="section">
+    <h2>A. Multiplying with a Monomial</h2>
+    <p>When multiplying a polynomial by a monomial, we use the distributive property to multiply each term of the polynomial by the monomial.</p>
+    
+    <div class="formula-box">
+        <p>$$a(b + c) = ab + ac$$</p>
+    </div>
+    
+    <div class="example">
+        <h3>Example:</h3>
+        <p>Simplify: $$5x - 2x[3x - (5x - 1)]$$</p>
+        <div class="solution">
+            <p>Step 1: Simplify inside the brackets</p>
+            <p>$$5x - 2x[3x - (5x - 1)]$$</p>
+            <p>$$= 5x - 2x[3x - 5x + 1]$$</p>
+            <p>$$= 5x - 2x[-2x + 1]$$</p>
+            
+            <p>Step 2: Apply the distributive property</p>
+            <p>$$= 5x - 2x \cdot (-2x) + 2x \cdot 1$$</p>
+            <p>$$= 5x + 4x^2 + 2x$$</p>
+            
+            <p>Step 3: Combine like terms</p>
+            <p>$$= 4x^2 + 7x$$</p>
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+    </div>
+</section>
+
+<section id="multiplying-binomials" class="section">
+    <h2>B. Multiplying Binomials</h2>
+    <p>There are several methods for multiplying binomials, including the FOIL method and using the distributive property.</p>
+    
+    <div class="example">
+        <h3>Example:</h3>
+        <p>Multiply: $$(2x - 3)(5x + 1)$$</p>
+        <div class="solution">
+            <p>Using FOIL:</p>
+            <p><strong>F</strong>irst: $$2x \cdot 5x = 10x^2$$</p>
+            <p><strong>O</strong>utside: $$2x \cdot 1 = 2x$$</p>
+            <p><strong>I</strong>nside: $$-3 \cdot 5x = -15x$$</p>
+            <p><strong>L</strong>ast: $$-3 \cdot 1 = -3$$</p>
+            <p>Combining all terms: $$10x^2 + 2x - 15x - 3$$</p>
+            <p>Simplified: $$10x^2 - 13x - 3$$</p>
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+    </div>
+</section>
+
+<section id="special-cases-expanded" class="section">
+    <h2>Special Cases of Binomial Multiplication</h2>
+    
+    <div class="special-case">
+        <h3>1. Squaring a Binomial</h3>
+        <div class="formula-box">
+            <p>$$(a + b)^2 = a^2 + 2ab + b^2$$</p>
+            <p>$$(a - b)^2 = a^2 - 2ab + b^2$$</p>
+        </div>
+        
+        <div class="example">
+            <h4>Example:</h4>
+            <p>Simplify: $$(2x - 5)^2$$</p>
+            <div class="solution">
+                <p>Using the formula $$(a - b)^2 = a^2 - 2ab + b^2$$:</p>
+                <p>$$(2x - 5)^2 = (2x)^2 - 2(2x)(5) + 5^2$$</p>
+                <p>$$= 4x^2 - 20x + 25$$</p>
+            </div>
+            <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+        </div>
+    </div>
+    
+    <div class="special-case">
+        <h3>2. Difference of Squares</h3>
+        <div class="formula-box">
+            <p>$$(a + b)(a - b) = a^2 - b^2$$</p>
+        </div>
+        
+        <div class="example">
+            <h4>Example:</h4>
+            <p>Simplify: $$(2x - 3)(2x + 3)$$</p>
+            <div class="solution">
+                <p>Using the formula $$(a + b)(a - b) = a^2 - b^2$$:</p>
+                <p>$$(2x - 3)(2x + 3) = (2x)^2 - 3^2$$</p>
+                <p>$$= 4x^2 - 9$$</p>
+            </div>
+            <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+        </div>
+    </div>
+</section>
+
+<section id="combination" class="section">
+    <h2>C. Combination</h2>
+    <p>Sometimes we need to combine multiple techniques to multiply more complex polynomial expressions.</p>
+    
+    <div class="example">
+        <h3>Example:</h3>
+        <p>Simplify: $$-5(3 - 4x)^2 + 3(5 - 2x)(5 + 2x)$$</p>
+        <div class="solution">
+            <p>Step 1: Simplify $$(3 - 4x)^2$$ using the square of a binomial formula</p>
+            <p>$$(3 - 4x)^2 = 3^2 - 2(3)(4x) + (4x)^2$$</p>
+            <p>$$= 9 - 24x + 16x^2$$</p>
+            
+            <p>Step 2: Simplify $$(5 - 2x)(5 + 2x)$$ using the difference of squares formula</p>
+            <p>$$(5 - 2x)(5 + 2x) = 5^2 - (2x)^2$$</p>
+            <p>$$= 25 - 4x^2$$</p>
+            
+            <p>Step 3: Substitute back into the original expression</p>
+            <p>$$-5(9 - 24x + 16x^2) + 3(25 - 4x^2)$$</p>
+            <p>$$= -45 + 120x - 80x^2 + 75 - 12x^2$$</p>
+            <p>$$= -45 + 75 + 120x - 80x^2 - 12x^2$$</p>
+            <p>$$= 30 + 120x - 92x^2$$</p>
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+    </div>
+</section>
+
+<section id="multiplying-polynomials" class="section">
+    <h2>D. Multiplying Polynomials</h2>
+    <p>For multiplying general polynomials, we multiply each term of one polynomial by each term of the other polynomial.</p>
+    
+    <div class="example">
+        <h3>Example:</h3>
+        <p>Multiply: $$(2x^2 - 3x + 4)(3x - 5)$$</p>
+        <div class="solution">
+            <p>Step 1: Multiply each term of the first polynomial by each term of the second</p>
+            <p>$$(2x^2)(3x) = 6x^3$$</p>
+            <p>$$(2x^2)(-5) = -10x^2$$</p>
+            <p>$$(-3x)(3x) = -9x^2$$</p>
+            <p>$$(-3x)(-5) = 15x$$</p>
+            <p>$$(4)(3x) = 12x$$</p>
+            <p>$$(4)(-5) = -20$$</p>
+            
+            <p>Step 2: Combine like terms</p>
+            <p>$$6x^3 - 10x^2 - 9x^2 + 15x + 12x - 20$$</p>
+            <p>$$= 6x^3 - 19x^2 + 27x - 20$$</p>
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+    </div>
+</section>
+
+<section id="application" class="section">
+    <h2>E. Application</h2>
+    <p>Polynomial multiplication has many real-world applications, including calculating areas, volumes, and solving problems in physics and engineering.</p>
+    
+    <div class="formula-box">
+        <p>Volume of a rectangular prism: $$Vol = l \times w \times h$$</p>
+        <p>Surface area of a rectangular prism: $$SA = 2lw + 2lh + 2wh$$</p>
+    </div>
+    
+    <div class="example">
+        <h3>Example:</h3>
+        <p>A rectangular prism has dimensions $$2x+3$$ by $$x-3$$ by $$x-4$$. Write a simplified expression for the surface area of the prism.</p>
+        <div class="solution">
+            <p>Step 1: Use the surface area formula</p>
+            <p>$$SA = 2(2x+3)(x-3) + 2(2x+3)(x-4) + 2(x-3)(x-4)$$</p>
+            
+            <p>Step 2: Multiply each pair of binomials</p>
+            <p>$$(2x+3)(x-3) = 2x^2 - 6x + 3x - 9 = 2x^2 - 3x - 9$$</p>
+            <p>$$(2x+3)(x-4) = 2x^2 - 8x + 3x - 12 = 2x^2 - 5x - 12$$</p>
+            <p>$$(x-3)(x-4) = x^2 - 4x - 3x + 12 = x^2 - 7x + 12$$</p>
+            
+            <p>Step 3: Substitute back into the surface area formula</p>
+            <p>$$SA = 2(2x^2 - 3x - 9) + 2(2x^2 - 5x - 12) + 2(x^2 - 7x + 12)$$</p>
+            <p>$$= 4x^2 - 6x - 18 + 4x^2 - 10x - 24 + 2x^2 - 14x + 24$$</p>
+            <p>$$= 4x^2 + 4x^2 + 2x^2 - 6x - 10x - 14x - 18 - 24 + 24$$</p>
+            <p>$$= 10x^2 - 30x - 18$$</p>
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+    </div>
+</section>
+
+        <section id="practice" class="section">
+            <h2>Practice Problems</h2>
+            <p>Test your understanding with these interactive practice problems:</p>
+            
+            <div class="practice-problem">
+                <h3>Problem 1:</h3>
+                <p>Multiply: $$(3x + 2)(x - 4)$$</p>
+                <div class="answer-input">
+                    <input type="text" id="problem1-answer" placeholder="Your answer (e.g., 3x^2-10x-8)">
+                    <button onclick="checkAnswer('problem1-answer', '3x^2-10x-8')">Check</button>
+                    <button class="get-answer-btn" onclick="showAnswer('problem1-answer', '3x^2-10x-8')">Get Answer</button>
+                </div>
+                <div id="problem1-feedback" class="feedback"></div>
+                <button class="hint-btn" onclick="showHint('problem1-hint')">Hint</button>
+                <div id="problem1-hint" class="hint">
+                    <p>Use the FOIL method:</p>
+                    <p>F: 3x · x</p>
+                    <p>O: 3x · (-4)</p>
+                    <p>I: 2 · x</p>
+                    <p>L: 2 · (-4)</p>
+                </div>
+            </div>
+            
+            <div class="practice-problem">
+                <h3>Problem 2:</h3>
+                <p>Simplify: $$(x + 5)^2$$</p>
+                <div class="answer-input">
+                    <input type="text" id="problem2-answer" placeholder="Your answer (e.g., x^2+10x+25)">
+                    <button onclick="checkAnswer('problem2-answer', 'x^2+10x+25')">Check</button>
+                    <button class="get-answer-btn" onclick="showAnswer('problem2-answer', 'x^2+10x+25')">Get Answer</button>
+                </div>
+                <div id="problem2-feedback" class="feedback"></div>
+                <button class="hint-btn" onclick="showHint('problem2-hint')">Hint</button>
+                <div id="problem2-hint" class="hint">
+                    <p>Use the formula for squaring a binomial:</p>
+                    <p>(a + b)² = a² + 2ab + b²</p>
+                </div>
+            </div>
+            
+            <div class="practice-problem">
+                <h3>Problem 3:</h3>
+                <p>Multiply: $$(2x^2 - 3x + 4)(3x - 5)$$</p>
+                <div class="answer-input">
+                    <input type="text" id="problem3-answer" placeholder="Your answer (e.g., 6x^3-19x^2+27x-20)">
+                    <button onclick="checkAnswer('problem3-answer', '6x^3-19x^2+27x-20')">Check</button>
+                    <button class="get-answer-btn" onclick="showAnswer('problem3-answer', '6x^3-19x^2+27x-20')">Get Answer</button>
+                </div>
+                <div id="problem3-feedback" class="feedback"></div>
+                <button class="hint-btn" onclick="showHint('problem3-hint')">Hint</button>
+                <div id="problem3-hint" class="hint">
+                    <p>Multiply each term of the first polynomial by each term of the second polynomial:</p>
+                    <p>(2x²)(3x) + (2x²)(-5) + (-3x)(3x) + (-3x)(-5) + (4)(3x) + (4)(-5)</p>
+                </div>
+            </div>
+            
+            <div class="generate-btn-container">
+                <button id="generate-problem" class="generate-btn">Generate New Problem</button>
+            </div>
+            <div id="generated-problem" class="practice-problem">
+                <!-- Generated problem will appear here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Multiplying Polynomials. Created by Jason Cameron, Angela, Shelley Berlov & Maxim</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
