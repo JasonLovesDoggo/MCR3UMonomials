@@ -287,31 +287,41 @@
     </section>
 
     <section id="combination" class="section">
-        <h2>C. Combination</h2>
-        <p>Sometimes we need to combine multiple techniques to multiply more complex polynomial expressions.</p>
-
-        <div class="example">
-            <h3>Example:</h3>
-            <p>Simplify: $$-5(3 - 4x)^2 + 3(5 - 2x)(5 + 2x)$$</p>
-            <div class="solution">
-                <p>Step 1: Simplify $$(3 - 4x)^2$$ using the square of a binomial formula</p>
-                <p>$$(3 - 4x)^2 = 3^2 - 2(3)(4x) + (4x)^2$$</p>
-                <p>$$= 9 - 24x + 16x^2$$</p>
-
-                <p>Step 2: Simplify $$(5 - 2x)(5 + 2x)$$ using the difference of squares formula</p>
-                <p>$$(5 - 2x)(5 + 2x) = 5^2 - (2x)^2$$</p>
-                <p>$$= 25 - 4x^2$$</p>
-
-                <p>Step 3: Substitute back into the original expression</p>
-                <p>$$-5(9 - 24x + 16x^2) + 3(25 - 4x^2)$$</p>
-                <p>$$= -45 + 120x - 80x^2 + 75 - 12x^2$$</p>
-                <p>$$= -45 + 75 + 120x - 80x^2 - 12x^2$$</p>
-                <p>$$= 30 + 120x - 92x^2$$</p>
-                <p>$$= 92x^2 - 120x - 30$$</p>
-            </div>
-            <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+    <h2>C. Combination</h2>
+    <p>Sometimes we need to combine multiple techniques to multiply more complex polynomial expressions.</p>
+    <div class="example">
+        <h3>Example:</h3>
+        <p>Simplify: $$-5(3 - 4x)^2 + 3(5 - 2x)(5 + 2x)$$</p>
+        <div class="solution">
+            <p>Step 1: Simplify $$(3 - 4x)^2$$ using the square of a binomial formula $$(a - b)^2 = a^2 - 2ab + b^2$$</p>
+            <p>$$(3 - 4x)^2 = 3^2 - 2(3)(4x) + (4x)^2$$</p>
+            <p>$$= 9 - 24x + 16x^2$$</p>
+            
+            <p>Step 2: Simplify $$(5 - 2x)(5 + 2x)$$ using the difference of squares formula $$(a - b)(a + b) = a^2 - b^2$$</p>
+            <p>$$(5 - 2x)(5 + 2x) = 5^2 - (2x)^2$$</p>
+            <p>$$= 25 - 4x^2$$</p>
+            
+            <p>Step 3: Substitute back into the original expression</p>
+            <p>$$-5(9 - 24x + 16x^2) + 3(25 - 4x^2)$$</p>
+            
+            <p>Step 4: Multiply through each parenthesis</p>
+            <p>$$-5(9 - 24x + 16x^2) = -45 + 120x - 80x^2$$</p>
+            <p>$$3(25 - 4x^2) = 75 - 12x^2$$</p>
+            
+            <p>Step 5: Combine all terms</p>
+            <p>$$-45 + 120x - 80x^2 + 75 - 12x^2$$</p>
+            <p>$$= (-45 + 75) + 120x + (-80x^2 - 12x^2)$$</p>
+            <p>$$= 30 + 120x - 92x^2$$</p>
+            
+            <p>Step 6: Rearrange into standard form (descending powers of x)</p>
+            <p>$$30 + 120x - 92x^2$$</p>
+            <p>$$= -92x^2 + 120x + 30$$</p>
+            <p>$$= -1(-92x^2 + 120x + 30)$$</p>
+            <p>$$= 92x^2 - 120x - 30$$</p>
         </div>
-    </section>
+        <button class="toggle-btn" onclick="toggleSolution(this)">Show Solution</button>
+    </div>
+</section>
 
     <section id="multiplying-polynomials" class="section">
         <h2>D. Multiplying Polynomials</h2>
