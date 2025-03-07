@@ -326,6 +326,49 @@ main {
   margin-bottom: 1rem;
 }
 
+/* Problem Categories Styles */
+.problem-categories {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #f0f7ff;
+  border-radius: var(--border-radius);
+  border: 1px solid #cce5ff;
+}
+
+.problem-categories h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.categories-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.category-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  user-select: none;
+}
+
+.category-checkbox:hover {
+  background-color: rgba(107, 140, 174, 0.1);
+}
+
+.category-checkbox input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
 /* Footer Styles */
 footer {
   background-color: var(--dark-color);
@@ -354,8 +397,8 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .answer-input {
-    flex-direction: column;
+  .categories-container {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -391,3 +434,48 @@ footer {
   color: #28a745;
 }
 
+/* Add styling for the power range slider */
+.power-range-container {
+  margin: 1rem 0;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+}
+
+.power-slider {
+  width: 100%;
+  max-width: 300px;
+  height: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #dee2e6;
+  outline: none;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+}
+
+.power-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.power-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.power-slider::-webkit-slider-thumb:hover {
+  background: var(--accent-color);
+}
+
+.power-slider::-moz-range-thumb:hover {
+  background: var(--accent-color);
+}

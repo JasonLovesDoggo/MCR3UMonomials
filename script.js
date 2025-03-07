@@ -43,6 +43,37 @@ function normalizeExpression(expr) {
   return expr.toLowerCase().replace(/\s+/g, "").replace(/\*/g, "").replace(/\^/g, "^")
 }
 
+// Format polynomial term properly (handle powers of 0 and 1)
+function formatTerm(coefficient, variable, power) {
+  if (coefficient === 0) return ""
+
+  let result = ""
+
+  // Handle coefficient
+  if (coefficient === 1 && power > 0) {
+    // For coefficient of 1 with a variable, don't show the 1
+    result = ""
+  } else if (coefficient === -1 && power > 0) {
+    // For coefficient of -1 with a variable, just show the minus
+    result = "-"
+  } else {
+    // Otherwise show the coefficient
+    result = coefficient.toString()
+  }
+
+  // Add variable with power
+  if (power === 0) {
+    // No variable for power of 0
+    return result
+  } else if (power === 1) {
+    // For power of 1, just the variable
+    return result + variable
+  } else {
+    // For higher powers, add the exponent
+    return result + variable + "^" + power
+  }
+}
+
 // FOIL method interactive highlighting
 document.addEventListener("DOMContentLoaded", () => {
   const highlightF = document.getElementById("highlight-f")
@@ -57,59 +88,66 @@ document.addEventListener("DOMContentLoaded", () => {
   const lastStep = document.getElementById("last-step")
 
   function clearHighlights() {
-    firstStep.classList.remove("highlight")
-    outsideStep.classList.remove("highlight")
-    insideStep.classList.remove("highlight")
-    lastStep.classList.remove("highlight")
+    if (firstStep) firstStep.classList.remove("highlight")
+    if (outsideStep) outsideStep.classList.remove("highlight")
+    if (insideStep) insideStep.classList.remove("highlight")
+    if (lastStep) lastStep.classList.remove("highlight")
   }
 
-  highlightF.addEventListener("click", () => {
+  highlightF?.addEventListener("click", () => {
     clearHighlights()
     firstStep.classList.add("highlight")
   })
 
-  highlightO.addEventListener("click", () => {
+  highlightO?.addEventListener("click", () => {
     clearHighlights()
     outsideStep.classList.add("highlight")
   })
 
-  highlightI.addEventListener("click", () => {
+  highlightI?.addEventListener("click", () => {
     clearHighlights()
     insideStep.classList.add("highlight")
   })
 
-  highlightL.addEventListener("click", () => {
+  highlightL?.addEventListener("click", () => {
     clearHighlights()
     lastStep.classList.add("highlight")
   })
 
-  showAll.addEventListener("click", () => {
+  showAll?.addEventListener("click", () => {
     clearHighlights()
   })
+
+  // Problem category selection checkboxes
+  const problemCategories = document.querySelectorAll('.problem-category')
+  problemCategories.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      // Ensure at least one category is selected
+      const atLeastOneChecked = Array.from(problemCategories).some(cb => cb.checked)
+      if (!atLeastOneChecked) {
+        this.checked = true
+      }
+    })
+  })
+
+  // Update the max power display when slider changes
+  const maxPowerSlider = document.getElementById("max-power")
+  const maxPowerValue = document.getElementById("max-power-value")
+
+  if (maxPowerSlider && maxPowerValue) {
+    maxPowerValue.textContent = maxPowerSlider.value
+
+    maxPowerSlider.addEventListener("input", function() {
+      maxPowerValue.textContent = this.value
+    })
+  }
 
   // Generate random polynomial multiplication problems
   const generateBtn = document.getElementById("generate-problem")
   const generatedProblemContainer = document.getElementById("generated-problem")
 
-  generateBtn.addEventListener("click", () => {
-    const problem = generateRandomProblem()
-    generatedProblemContainer.innerHTML = `
-        <h3>New Problem:</h3>
-        <p>${problem.question}</p>
-        <div class="answer-input">
-            <input type="text" id="random-problem-answer" placeholder="Your answer">
-            <button onclick="checkRandomAnswer('${problem.answer}')">Check</button>
-            <button class="get-answer-btn" onclick="showAnswer('random-problem-answer', '${problem.answer}')">Get Answer</button>
-        </div>
-        <div id="random-problem-feedback" class="feedback"></div>
-        <button class="hint-btn" onclick="showHint('random-problem-hint')">Hint</button>
-        <div id="random-problem-hint" class="hint">
-            <p>${problem.hint}</p>
-        </div>
-    `
-
-    // Re-render math in the new problem
-    initKaTeX()
+  generateBtn?.addEventListener("click", () => {
+    generateAndTypeset()
   })
 })
 
@@ -130,25 +168,136 @@ function checkRandomAnswer(correctAnswer) {
   }
 }
 
-// Generate random polynomial multiplication problem
-function generateRandomProblem() {
-  const types = [
+// Get selected problem categories
+function getSelectedCategories() {
+  const categories = document.querySelectorAll('.problem-category')
+  const selectedCategories = []
+
+  categories.forEach(category => {
+    if (category.checked) {
+      selectedCategories.push(category.value)
+    }
+  })
+
+  // If no categories are selected, return all categories (should not happen due to UI logic)
+  return selectedCategories.length > 0 ? selectedCategories : [
     "binomial-binomial",
     "binomial-square",
     "difference-of-squares",
     "monomial-polynomial",
     "polynomial-polynomial",
+    "higher-powers"
   ]
-  const type = types[Math.floor(Math.random() * types.length)]
+}
+
+// Generate a random integer between min and max (inclusive)
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+// Generate random polynomial with specific degree
+function generateRandomPolynomial(degree, variable = 'x') {
+  const terms = []
+
+  // Generate leading coefficient (non-zero)
+  let leadingCoef = randomInt(-5, 5)
+  if (leadingCoef === 0) leadingCoef = 1
+
+  // Add the leading term
+  terms.push({
+    coefficient: leadingCoef,
+    power: degree
+  })
+
+  // Generate remaining terms
+  for (let power = degree - 1; power >= 0; power--) {
+    // Make some coefficients zero to create gaps
+    const includeThisTerm = randomInt(0, 1)
+    if (includeThisTerm || power === 0) { // Always include constant term
+      const coef = randomInt(-5, 5)
+      if (coef !== 0) {
+        terms.push({
+          coefficient: coef,
+          power: power
+        })
+      }
+    }
+  }
+
+  return terms
+}
+
+// Format a polynomial with higher powers correctly
+function formatHigherPolynomial(terms) {
+  if (!terms || terms.length === 0) return "0"
+
+  let result = ""
+  let isFirst = true
+
+  // Sort terms by descending power
+  terms.sort((a, b) => b.power - a.power)
+
+  for (const term of terms) {
+    const { coefficient, power } = term
+
+    if (coefficient === 0) continue
+
+    // Format this term
+    let termStr = ""
+
+    // Add coefficient (if not 1 or -1 with variable)
+    if (power > 0) {
+      if (coefficient === 1) {
+        // No coefficient for 1
+        termStr = ""
+      } else if (coefficient === -1) {
+        // Just minus sign for -1
+        termStr = "-"
+      } else {
+        termStr = coefficient.toString()
+      }
+    } else {
+      // Always show coefficient for constant term
+      termStr = coefficient.toString()
+    }
+
+    // Add variable with power
+    if (power > 0) {
+      termStr += "x"
+      if (power > 1) {
+        termStr += "^" + power
+      }
+    }
+
+    // Add to result with appropriate sign
+    if (isFirst) {
+      result += termStr
+      isFirst = false
+    } else {
+      if (coefficient > 0) {
+        result += "+" + termStr
+      } else {
+        result += termStr // Negative sign is already included in termStr
+      }
+    }
+  }
+
+  return result || "0"
+}
+
+// Generate random polynomial multiplication problem
+function generateRandomProblem() {
+  const selectedTypes = getSelectedCategories()
+  const type = selectedTypes[Math.floor(Math.random() * selectedTypes.length)]
 
   let question, answer, hint
 
   switch (type) {
     case "binomial-binomial":
-      const a = Math.floor(Math.random() * 5) + 1
-      const b = Math.floor(Math.random() * 10) - 5
-      const c = Math.floor(Math.random() * 5) + 1
-      const d = Math.floor(Math.random() * 10) - 5
+      const a = randomInt(1, 5)
+      const b = randomInt(-5, 5)
+      const c = randomInt(1, 5)
+      const d = randomInt(-5, 5)
 
       const bSign = b >= 0 ? "+" : ""
       const dSign = d >= 0 ? "+" : ""
@@ -163,15 +312,20 @@ function generateRandomProblem() {
 
       // Combine like terms
       const middleTerm = outside + inside
-      const middleSign = middleTerm >= 0 ? "+" : ""
 
-      answer = `${first}x^2${middleSign}${middleTerm}x${last >= 0 ? "+" : ""}${last}`
-      hint = `Use the FOIL method:\nF: ${a}x · ${c}x = ${a * c}x²\nO: ${a}x · ${d} = ${a * d}x\nI: ${b} · ${c}x = ${b * c}x\nL: ${b} · ${d} = ${b * d}`
-      break
+      // Format the answer properly
+      let answerParts = []
+      if (first !== 0) answerParts.push(formatTerm(first, "x", 2))
+      if (middleTerm !== 0) answerParts.push(formatTerm(middleTerm, "x", 1))
+      if (last !== 0) answerParts.push(formatTerm(last, "x", 0))
+
+      answer = answerParts.join("+").replace(/\+\-/g, "-")
+      hint = `Use the FOIL method:\nF: ${a}x · ${c}x = ${first}x²\nO: ${a}x · ${d} = ${a * d}x\nI: ${b} · ${c}x = ${b * c}x\nL: ${b} · ${d} = ${b * d}`
+      break;
 
     case "binomial-square":
-      const p = Math.floor(Math.random() * 5) + 1
-      const q = Math.floor(Math.random() * 10) - 5
+      const p = randomInt(1, 5)
+      const q = randomInt(-5, 5)
       const qSign = q >= 0 ? "+" : ""
 
       question = `Simplify: \$$(${p}x${qSign}${q})^2\$$`
@@ -181,15 +335,19 @@ function generateRandomProblem() {
       const middle = 2 * p * q
       const qSquared = q * q
 
-      const middleSquareSign = middle >= 0 ? "+" : ""
+      // Format the answer properly
+      let squareAnswerParts = []
+      if (pSquared !== 0) squareAnswerParts.push(formatTerm(pSquared, "x", 2))
+      if (middle !== 0) squareAnswerParts.push(formatTerm(middle, "x", 1))
+      if (qSquared !== 0) squareAnswerParts.push(formatTerm(qSquared, "x", 0))
 
-      answer = `${pSquared}x^2${middleSquareSign}${middle}x+${qSquared}`
+      answer = squareAnswerParts.join("+").replace(/\+\-/g, "-")
       hint = `Use the formula (a+b)² = a² + 2ab + b²:\n(${p}x${qSign}${q})² = (${p}x)² + 2(${p}x)(${q}) + (${q})²`
-      break
+      break;
 
     case "difference-of-squares":
-      const r = Math.floor(Math.random() * 5) + 1
-      const s = Math.floor(Math.random() * 5) + 1
+      const r = randomInt(1, 5)
+      const s = randomInt(1, 5)
 
       question = `Simplify: \$$(${r}x+${s})(${r}x-${s})\$$`
 
@@ -199,77 +357,106 @@ function generateRandomProblem() {
 
       answer = `${rSquared}x^2-${sSquared}`
       hint = `Use the formula (a+b)(a-b) = a² - b²:\n(${r}x+${s})(${r}x-${s}) = (${r}x)² - (${s})²`
-      break
+      break;
 
     case "monomial-polynomial":
-      const m = Math.floor(Math.random() * 5) + 1
-      const n1 = Math.floor(Math.random() * 5) + 1
-      const n2 = Math.floor(Math.random() * 10) - 5
-      const n3 = Math.floor(Math.random() * 10) - 5
+      const m = randomInt(1, 5)
+      const n1 = randomInt(1, 5)
+      const n2 = randomInt(-5, 5)
+      const n3 = randomInt(-5, 5)
 
-      const n2Sign = n2 >= 0 ? "+" : ""
-      const n3Sign = n3 >= 0 ? "+" : ""
+      // Create polynomial terms
+      const polyTerms = [
+        { coefficient: n1, power: 2 },
+        { coefficient: n2, power: 1 },
+        { coefficient: n3, power: 0 }
+      ].filter(term => term.coefficient !== 0);
 
-      question = `Multiply: \$$${m}x(${n1}x^2${n2Sign}${n2}x${n3Sign}${n3})\$$`
+      const polyStr = formatHigherPolynomial(polyTerms);
 
-      // Calculate using distributive property
-      const term1 = m * n1
-      const term2 = m * n2
-      const term3 = m * n3
+      question = `Multiply: \$$${m}x(${polyStr})\$$`
 
-      const term2Sign = term2 >= 0 ? "+" : ""
-      const term3Sign = term3 >= 0 ? "+" : ""
+      // Calculate result terms
+      const resultTerms = polyTerms.map(term => ({
+        coefficient: m * term.coefficient,
+        power: term.power + 1
+      }));
 
-      answer = `${term1}x^3${term2Sign}${term2}x^2${term3Sign}${term3}x`
-      hint = `Use the distributive property:\n${m}x(${n1}x^2${n2Sign}${n2}x${n3Sign}${n3}) = ${m}x·${n1}x^2 + ${m}x·${n2}x + ${m}x·${n3}`
-      break
+      answer = formatHigherPolynomial(resultTerms);
+      hint = `Use the distributive property:\n${m}x(${polyStr}) = ${m}x · each term`;
+      break;
 
     case "polynomial-polynomial":
-      const poly1 = [Math.floor(Math.random() * 5) + 1, Math.floor(Math.random() * 10) - 5]
-      const poly2 = [
-        Math.floor(Math.random() * 5) + 1,
-        Math.floor(Math.random() * 10) - 5,
-        Math.floor(Math.random() * 10) - 5,
-      ]
+      const poly1Terms = generateRandomPolynomial(1);
+      const poly2Terms = generateRandomPolynomial(2);
 
-      const poly1_1Sign = poly1[1] >= 0 ? "+" : ""
-      const poly2_1Sign = poly2[1] >= 0 ? "+" : ""
-      const poly2_2Sign = poly2[2] >= 0 ? "+" : ""
+      const poly1Str = formatHigherPolynomial(poly1Terms);
+      const poly2Str = formatHigherPolynomial(poly2Terms);
 
-      question = `Multiply: \$$(${poly1[0]}x${poly1_1Sign}${poly1[1]})(${poly2[0]}x^2${poly2_1Sign}${poly2[1]}x${poly2_2Sign}${poly2[2]})\$$`
+      question = `Multiply: \$$(${poly1Str})(${poly2Str})\$$`
 
-      // Calculate by multiplying each term
-      const result = [
-        poly1[0] * poly2[0], // x^3 term
-        poly1[0] * poly2[1] + poly1[1] * poly2[0], // x^2 term
-        poly1[0] * poly2[2] + poly1[1] * poly2[1], // x term
-        poly1[1] * poly2[2], // constant term
-      ]
+      // Calculate result by multiplying each term
+      const resultPolyTerms = [];
+      for (const term1 of poly1Terms) {
+        for (const term2 of poly2Terms) {
+          const newCoef = term1.coefficient * term2.coefficient;
+          const newPower = term1.power + term2.power;
 
-      const result1Sign = result[1] >= 0 ? "+" : ""
-      const result2Sign = result[2] >= 0 ? "+" : ""
-      const result3Sign = result[3] >= 0 ? "+" : ""
+          // Find if we already have a term with this power
+          const existingTerm = resultPolyTerms.find(t => t.power === newPower);
+          if (existingTerm) {
+            existingTerm.coefficient += newCoef;
+          } else {
+            resultPolyTerms.push({ coefficient: newCoef, power: newPower });
+          }
+        }
+      }
 
-      answer = `${result[0]}x^3${result1Sign}${result[1]}x^2${result2Sign}${result[2]}x${result3Sign}${result[3]}`
-      hint = `Multiply each term of the first polynomial by each term of the second polynomial:\n(${poly1[0]}x)(${poly2[0]}x^2) + (${poly1[0]}x)(${poly2[1]}x) + (${poly1[0]}x)(${poly2[2]}) + (${poly1[1]})(${poly2[0]}x^2) + (${poly1[1]})(${poly2[1]}x) + (${poly1[1]})(${poly2[2]})`
-      break
+      answer = formatHigherPolynomial(resultPolyTerms);
+      hint = `Multiply each term of the first polynomial by each term of the second, then combine like terms.`;
+      break;
+
+    case "higher-powers":
+      // Get the maximum power from the slider
+      const maxPower = parseInt(document.getElementById("max-power")?.value || "5");
+
+      // Generate degrees between 2 and maxPower
+      const highDegree1 = randomInt(2, Math.max(2, maxPower - 2));
+      const highDegree2 = randomInt(2, Math.max(2, maxPower - highDegree1));
+
+      // Generate polynomials with higher powers
+      const highPoly1Terms = generateRandomPolynomial(highDegree1);
+      const highPoly2Terms = generateRandomPolynomial(highDegree2);
+
+      const highPoly1Str = formatHigherPolynomial(highPoly1Terms);
+      const highPoly2Str = formatHigherPolynomial(highPoly2Terms);
+
+      question = `Multiply: \$$(${highPoly1Str})(${highPoly2Str})\$$`
+
+      // Calculate result for high-power polynomials
+      const resultHighTerms = [];
+      for (const term1 of highPoly1Terms) {
+        for (const term2 of highPoly2Terms) {
+          const newCoef = term1.coefficient * term2.coefficient;
+          const newPower = term1.power + term2.power;
+
+          // Find if we already have a term with this power
+          const existingTerm = resultHighTerms.find(t => t.power === newPower);
+          if (existingTerm) {
+            existingTerm.coefficient += newCoef;
+          } else {
+            resultHighTerms.push({ coefficient: newCoef, power: newPower });
+          }
+        }
+      }
+
+      answer = formatHigherPolynomial(resultHighTerms);
+      hint = `Multiply each term of the first polynomial by each term of the second, then combine like terms.
+              The highest degree term will be x^${highDegree1 + highDegree2}.`;
+      break;
   }
 
   return { question, answer, hint }
-}
-
-// Declare renderMathInElement (assuming it's provided by MathJax or similar)
-// If MathJax is included via CDN, this might not be necessary.
-// If using a module bundler, import it: import { renderMathInElement } from 'mathjax';
-// For this example, we'll assume it's globally available or included via CDN.
-const renderMathInElement = (el, options) => {
-  if (typeof MathJax !== "undefined") {
-    MathJax.typesetPromise([el]).catch((err) => {
-      console.log("Typeset failed: " + err.message)
-    })
-  } else {
-    console.warn("MathJax not found. Ensure it is loaded to render math elements.")
-  }
 }
 
 // Show the correct answer
@@ -281,21 +468,11 @@ function showAnswer(inputId, correctAnswer) {
   input.value = correctAnswer
 
   // Show feedback
-  feedback.textContent = `The correct answer is: ${correctAnswer}`
+  feedback.textContent = `The correct answer is: \$$${correctAnswer}$\$`
   feedback.className = "feedback answer-revealed"
-}
+  initMathJax()
 
-// Initialize KaTeX rendering
-function initKaTeX() {
-  if (typeof MathJax !== "undefined") {
-    MathJax.typesetPromise([document.body]).catch((err) => console.error("MathJax typeset failed: " + err.message))
-  } else {
-    console.warn("MathJax not loaded, math will not be rendered.")
-  }
 }
-
-// Call initKaTeX when the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", initKaTeX)
 
 // Initialize MathJax rendering
 function initMathJax() {
@@ -330,7 +507,7 @@ function generateAndTypeset() {
   initMathJax()
 }
 
-// Update event listener to use the new function
+// Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   // Initialize MathJax on page load
   initMathJax()
@@ -341,6 +518,3 @@ document.addEventListener("DOMContentLoaded", () => {
     generateBtn.addEventListener("click", generateAndTypeset)
   }
 })
-
-// Rest of your existing JavaScript code...
-
